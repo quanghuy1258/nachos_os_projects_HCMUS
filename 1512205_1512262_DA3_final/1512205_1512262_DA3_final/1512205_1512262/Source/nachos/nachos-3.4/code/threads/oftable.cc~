@@ -1,0 +1,48 @@
+#include "oftable.h"
+
+OFTable::OFTable() {
+    for (int i = 0; i < MAX_FILE-2; ++i) {
+        _pFile[i] = NULL;
+        _type[i] = -1;
+        _curOffset[i] = 0;
+    }
+}
+
+OFTable::~OFTable() {
+    for (int i = 0; i < MAX_FILE-2; ++i) {
+        if (_type[i] == -1)
+            continue;
+        delete _pFile[i];
+        _pFile[i] = NULL;
+        _type[i] = -1;
+        _curOffset[i] = 0;
+    }
+}
+
+int OFTable::Open(OpenFile* pFile, int type) {
+    if (type != 0 && type != 1) return -1;
+    if (pFile == NULL) return -1;
+    for (int i = 0; i < MAX_FILE-2; ++i) {
+        if (_type[i] != -1)
+            continue;
+        _pFile[i] = pFile;
+        _type[i] = type;
+        _curOffset[i] = 0;
+        return i+2;
+    }
+    return -1;
+}
+
+int OFTable::Close(int ofid) {
+    if (ofid < 2 || ofid >= MAX_FILE) return -1;
+    if (_type[ofid-2] == -1) {
+        return -1;
+    }
+    delete _pFile[ofid-2];
+    _pFile[ofid-2] = NULL;
+    _type[ofid-2] = -1;
+    _curOffset[ofid-2] = 0;
+    return 0;
+}
+
+

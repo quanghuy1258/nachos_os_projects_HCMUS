@@ -1,0 +1,21 @@
+#ifndef OFTABLE_H
+#define OFTABLE_H
+#include "openfile.h"
+
+#define MAX_FILE 10
+
+class OFTable {
+private:
+    OpenFile* pFile[MAX_FILE-2];
+    int type[MAX_FILE-2];
+    int curOffset[MAX_FILE-2];
+public:
+    OFTable();
+    ~OFTable();
+    int Open(char* name, int type);
+    int Close(int ofid);
+    int Read(char* buffer, int charcount, int ofid);
+    int Write(char* buffer, int charcount, int ofid);
+    int Seek(int pos, int ofid);
+};
+#endif
