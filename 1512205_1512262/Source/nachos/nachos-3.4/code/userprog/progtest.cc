@@ -20,6 +20,7 @@
 //	memory, and jump to it.
 //----------------------------------------------------------------------
 
+/*Edit to move main thread into pTab*/
 void
 StartProcess(char *filename)
 {

@@ -27,6 +27,7 @@ int STable::Create(char *name, int init) {
     _semTab[id] = new Sem();
     int ret = _semTab[id]->Create(name, init);
     if (ret == -1) {
+        delete _semTab[id];
         _bm->Clear(id);
         return -1;
     } else return 0;

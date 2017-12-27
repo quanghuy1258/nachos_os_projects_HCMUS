@@ -1,4 +1,4 @@
-// voinuoc.c
+/*voinuoc program*/
 #include "syscall.h"
 
 int
@@ -13,9 +13,7 @@ main()
     v1 = v2 = 0;
     while (1) {
         if (n == 0) break;
-        PrintString("Debug voinuoc.c before Wait voinuoc\n");
         Wait("voinuoc");
-        PrintString("Debug voinuoc.c after Wait voinuoc\n");
         vn = OpenF("voinuoc.txt", 1);
         n = 0;
         while (1) {
@@ -24,29 +22,22 @@ main()
             else break;
         }
         CloseF(vn);
-        PrintInt(n);
-        PrintChar('\n');
         if (n != 0) {
             if (v1 <= v2) {
                 v1 += n;
                 if (res != -1) 
                     WriteF("1 ", 2, res);
-                PrintString("1\n");
             } else {
                 v2 += n;
                 if (res != -1)
                     WriteF("2 ", 2, res);
-                PrintString("2\n");
             }
         }
-        PrintString("Debug voinuoc.c before Signal sinhvien\n");
         Signal("sinhvien");
-        PrintString("Debug voinuoc.c after Signal sinhvien\n");
     }
     if (res != -1) {
         WriteF("\n", 1, res);
         CloseF(res);
     }
-    PrintString("Debug voinuoc.c exit\n");
     ExitProc(0);
 }

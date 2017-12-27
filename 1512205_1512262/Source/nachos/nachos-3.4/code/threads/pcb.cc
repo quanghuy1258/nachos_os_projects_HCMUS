@@ -9,13 +9,17 @@ PCB::PCB() {
     _parentID = -1;
     _processID = -1;
     _joinsem = new Semaphore("joinsem", 0);
+    _exitsem = new Semaphore("exitsem", 0);
     _mutex = new Semaphore("mutex", 1);
     _joinid = -1;
     _joinexitcode = 0;
+    _numwait = 0;
+    _isExit = 0;
 }
 
 PCB::~PCB() {
     delete _joinsem;
+    delete _exitsem;
     delete _mutex; 
 }
 
@@ -66,6 +70,27 @@ void PCB::JoinRelease(int joinid, int joinexitcode) {
     _joinid = -1;
     _joinexitcode = joinexitcode;
     _joinsem->V();
+}
+
+void PCB::ExitWait() {
+    if (_numwait > 0) {
+        _isExit = 1;
+        _exitsem->P();
+    }
+}
+
+void PCB::ExitRelease() {
+    if (_numwait == 0 && _isExit == 1)
+        _exitsem->V();
+}
+
+void PCB::IncNumWait() {
+    ++_numwait;
+}
+
+void PCB::DecNumWait() {
+    if (_numwait > 0)
+        --_numwait;
 }
 
 int PCB::GetParentID() {

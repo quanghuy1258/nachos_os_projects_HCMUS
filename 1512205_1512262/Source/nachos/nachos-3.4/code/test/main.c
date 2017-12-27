@@ -1,4 +1,4 @@
-// main.c
+/*main program*/
 #include "syscall.h"
 
 int

@@ -1,4 +1,4 @@
-// sinhvien.c
+/*sinhvien program*/
 #include "syscall.h"
 
 int
@@ -35,15 +35,10 @@ main()
             } else ret = -1;
             if (c[0] == ' ' || c[0] == '\n') break;
             WriteF(c, 1, vn);
-            PrintChar(c[0]);
         }
-        PrintChar('\n');
         CloseF(vn);
-        PrintString("Debug sinhvien.c before Signal voinuoc\n");
         Signal("voinuoc");
-        PrintString("Debug sinhvien.c after Signal voinuoc and before Wait sinhvien\n");
         Wait("sinhvien");
-        PrintString("Debug sinhvien.c after Wait sinhvien\n");
     }
     ExitProc(0);
 }

@@ -60,6 +60,7 @@ SwapHeader (NoffHeader *noffH)
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
+/*Edit constructor for multithreading*/
 AddrSpace::AddrSpace(OpenFile *executable)
 {
     addrLock->P();
@@ -175,7 +176,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 // AddrSpace::~AddrSpace
 // 	Dealloate an address space.  Nothing for now!
 //----------------------------------------------------------------------
-
+/*Edit destructor for multithreading*/
 AddrSpace::~AddrSpace()
 {
    for (int i = 0; i < numPages; i++)

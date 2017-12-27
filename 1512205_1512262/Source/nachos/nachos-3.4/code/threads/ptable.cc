@@ -65,6 +65,7 @@ int PTable::ExecUpdate(char *filename) {
         _bmsem->V();
         return -1;
     }
+    _pcb[parentID]->IncNumWait();
     _bmsem->V();
     return processID;
 }
@@ -80,16 +81,20 @@ int PTable::ExitUpdate(int ec) {
     }
     if (processID == -1) return -1;
     int parentID = _pcb[processID]->GetParentID();
+    _pcb[processID]->ExitWait();
     if (parentID == -1) {
         interrupt->Halt();
         return 0;
     } else {
         _pcb[parentID]->JoinRelease(processID, ec);
+        _pcb[parentID]->DecNumWait();
+        _pcb[parentID]->ExitRelease();
         delete _pcb[processID];
         _pcb[processID] = NULL;
         _bm->Clear(processID);
         delete currentThread->space;
         currentThread->Finish();
+        return 0;
     }
 }
 

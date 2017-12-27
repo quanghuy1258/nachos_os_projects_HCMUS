@@ -60,31 +60,32 @@ SwapHeader (NoffHeader *noffH)
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
+/*Edit constructor for multithreading*/
 AddrSpace::AddrSpace(OpenFile *executable)
 {
     addrLock->P();
-    printf("Debug AddrSpace::AddrSpace #1\n");
+
     NoffHeader noffH;
     unsigned int i, size;
-    printf("Debug AddrSpace::AddrSpace #2\n");
+
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
     	SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
-    printf("Debug AddrSpace::AddrSpace #3\n");
+
 // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
-    printf("Debug AddrSpace::AddrSpace #4\n");
+
     ASSERT(numPages <= gPhysPageBitMap->NumClear());		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
-    printf("Debug AddrSpace::AddrSpace #5\n");
+
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
 // first, set up the translation 
@@ -100,7 +101,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 					// pages to be read-only
         bzero(&machine->mainMemory[pageTable[i].physicalPage*PageSize], PageSize);
     }
-    printf("Debug AddrSpace::AddrSpace #6\n");    
+
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
 //    bzero(machine->mainMemory, size);
@@ -176,6 +177,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 // 	Dealloate an address space.  Nothing for now!
 //----------------------------------------------------------------------
 
+/*Edit destructor for multithreading*/
 AddrSpace::~AddrSpace()
 {
    for (int i = 0; i < numPages; i++)
